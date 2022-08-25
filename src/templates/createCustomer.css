@@ -1,0 +1,16 @@
+.container-dialog {
+    width: 350px;
+  height: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .container-dialog {
+    width: 300px;
+  }
+}
+
+@media screen and (max-width: 526px) {
+    .container-dialog {
+      width: 250px;
+    }
+  }
