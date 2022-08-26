@@ -1,13 +1,4 @@
-import {
-  Alert,
-  Button,
-  Card,
-  CardContent,
-  CircularProgress,
-  Dialog,
-  Grid,
-  Snackbar,
-  Typography,
+import {Alert, Button, Card, CardContent, CircularProgress, Dialog, Grid, Snackbar, Typography,
 } from "@mui/material";
 import { Container } from "@mui/system";
 import React, { useEffect, useState } from "react";
@@ -30,15 +21,15 @@ function CustomerDetails() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogOpenEdit, setDialogOpenEdit] = useState(false);
   const [status, setStatus] = useState(1);
+
   useEffect(() => {
     setRefresh(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     getCustomerById();
     setRefresh(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
   useEffect(() => {
@@ -131,7 +122,14 @@ function CustomerDetails() {
                 </div>
               </CardContent>
             </Card>
-            {customer.pets !== undefined && (
+            {customer.pets.length === 0 && (
+              <>
+                <div style={{height: '80vh', textAlign: 'center'}}>
+                <h1 style={{marginTop: '5rem', color: '#ccc'}}>Você não cadastrou nenhum pet ainda</h1>
+                </div>
+              </>
+            )}
+              {customer.pets.length > 0 && (
               <Grid
                 style={{ marginTop: "0.3rem" }}
                 container
@@ -140,7 +138,7 @@ function CustomerDetails() {
               >
                 {customer.pets.map((resp, index) => (
                   <>
-                    <Grid item xs={2} sm={4} md={4}>
+                    <Grid item xs={12} sm={4} md={4}>
                       <PetCard
                         pet={resp}
                         index={index}

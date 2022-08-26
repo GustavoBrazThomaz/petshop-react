@@ -61,7 +61,7 @@ function PetCard({ pet, index, id, setRefresh, setSnackbarOpen, setSnackbarMsg, 
         {pet.species === "dog" && (
           <CardMedia
             style={{
-              background: "#737373",
+              background: "#ccc",
               display: "flex",
               justifyContent: "center",
             }}
@@ -76,7 +76,7 @@ function PetCard({ pet, index, id, setRefresh, setSnackbarOpen, setSnackbarMsg, 
         {pet.species === "cat" && (
           <CardMedia
             style={{
-              background: "#737373",
+              background: "#ccc",
               display: "flex",
               justifyContent: "center",
             }}
@@ -91,7 +91,7 @@ function PetCard({ pet, index, id, setRefresh, setSnackbarOpen, setSnackbarMsg, 
         {pet.species === "exotic" && (
           <CardMedia
             style={{
-              background: "#737373",
+              background: "#ccc",
               display: "flex",
               justifyContent: "center",
             }}
