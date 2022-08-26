@@ -13,10 +13,14 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useState } from "react";
-import API from "../hooks/API";
+import API from "../../hooks/API";
+import { useNavigate } from "react-router-dom";
 
 function CustomerCard({ customer, setRefresh, setSnackbarOpen, setSnackbarMsg, setSnackbarStatus}) {
+
   const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate()
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -25,6 +29,10 @@ function CustomerCard({ customer, setRefresh, setSnackbarOpen, setSnackbarMsg, s
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleClickRedirect = () => {
+    navigate(`/${customer._id}`)
+  }
 
   const handleDeleteCustomer = () => {
     API.delete(`/${customer._id}`)
@@ -55,7 +63,7 @@ function CustomerCard({ customer, setRefresh, setSnackbarOpen, setSnackbarMsg, s
           <CloseIcon fontSize="inherit" />
         </IconButton>
       </div>
-      <CardActionArea>
+      <CardActionArea onClick={handleClickRedirect}>
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
             Nome: {customer.name} {customer.lastName}

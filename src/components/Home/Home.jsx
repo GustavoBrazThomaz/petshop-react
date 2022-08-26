@@ -2,17 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Container } from "@mui/system";
 import {
   Alert,
-  AppBar,
   Button,
   Card,
   Dialog,
   Grid,
   Snackbar,
-  Toolbar,
 } from "@mui/material";
-import CustomerCard from "../../templates/CustomerCard";
+import CustomerCard from "../../templates/Cards/CustomerCard";
 import API from "../../hooks/API";
-import CreateCustomer from "../../templates/CreateCustomer";
+import CreateCustomer from "../../templates/Dialogs/CreateCustomer";
 
 function Home() {
   const [customers, setCustomers] = useState([]);
@@ -53,9 +51,6 @@ function Home() {
 
   return (
     <>
-      <AppBar>
-        <Toolbar></Toolbar>
-      </AppBar>
       <Container style={{ marginTop: "5rem" }}>
       <div style={{display: 'flex', justifyContent: 'flex-end'}}>
       <Button variant='outlined' color='primary' onClick={() => setDialogOpen(true)}>Adicionar Cliente</Button>
@@ -104,5 +99,6 @@ function Home() {
     </>
   );
 }
+
 
 export default Home;

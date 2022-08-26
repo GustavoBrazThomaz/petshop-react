@@ -11,9 +11,11 @@ import {
 import InputMask from "react-input-mask";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import API from "../hooks/API";
-import './createCustomer.css'
+import API from "../../hooks/API";
+import './dialog.css'
+
 function CreateCustomer({ setDialogOpen, setRefresh, setSnackbarOpen, setSnackbarMsg, setSnackbarStatus }) {
+  
   const { register, handleSubmit } = useForm();
   const [payment, setPayment] = useState(false);
 
@@ -38,7 +40,7 @@ function CreateCustomer({ setDialogOpen, setRefresh, setSnackbarOpen, setSnackba
 
   return (
     <>
-        <div className="container-dialog">
+      <div className="container-dialog">
       <DialogTitle style={{textAlign: 'center'}}>Adicionar Cliente</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)} >
         <DialogContent  style={{display: 'flex', flexDirection: 'column'}} >
