@@ -6,32 +6,54 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 import Home from "./components/Home/Home";
 import CustomerDetails from "./components/CustomerDetails/CustomerDetails";
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Button, Toolbar, Typography } from "@mui/material";
 import Page404 from "./templates/Page404";
+import Login from "./components/Auth/Login";
+import Register from "./components/Auth/Register";
+import ProtectedRoutes from "./components/Auth/Auth";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 function App() {
+
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
     },
   });
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("token")
+    window.location.reload()
+  }
+
   return (
     <>
       <ThemeProvider theme={darkTheme}>
-      <Router>
-      <AppBar>
-        <Toolbar>
-          <Link to='/' style={{textDecoration: 'none', color: 'white'}}>
-          <Typography variant='h5'>Petshop</Typography>
-          </Link>
-        </Toolbar>
-      </AppBar>
+        <Router>
+          <AppBar>
+            <Toolbar style={{diplay: 'flex', justifyContent: 'space-between'}}> 
+              <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+                <Typography variant="h5">Petshop</Typography>
+              </Link>
+
+              {window.localStorage.getItem("token") && (
+                <Button variant="outlined" endIcon={<LogoutIcon />} onClick={handleLogout}>
+                  Logout
+                </Button>
+              )}
+
+            </Toolbar>
+          </AppBar>
 
           <Routes>
-            <Route path="*" element={<Page404/>} />
-            <Route path="/" element={<Home />} />
-            <Route path="/:id" element={<CustomerDetails />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/Register" element={<Register />} />
+
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/customer/:id" element={<CustomerDetails />} />
+              <Route path="*" element={<Page404 />} />
+            </Route>
           </Routes>
         </Router>
       </ThemeProvider>

@@ -29,7 +29,7 @@ function PetCard({ pet, index, id, setRefresh, setSnackbarOpen, setSnackbarMsg, 
   };
 
   const handleDeletePet = () => {
-    API.delete(`pet/${id}/${index}`)
+    API.delete(`/customer/pet/${id}/${index}`)
       .then((resp) => {
         setOpen(false);
         setSnackbarMsg('Pet deletado com sucesso');
@@ -110,7 +110,6 @@ function PetCard({ pet, index, id, setRefresh, setSnackbarOpen, setSnackbarMsg, 
           {pet.genger === "female" && <Typography>Gênero: Fêmea</Typography>}
           {pet.genger === "male" && <Typography>Gênero: Macho</Typography>}
           <Typography>Peso: {pet.weight.toFixed(2)} Kg</Typography>
-          <Typography>Altura: {pet.height.toFixed(2)} Cm</Typography>
           {pet.service === "bath" && (
             <Typography>Tratamento: Banho</Typography>
           )}

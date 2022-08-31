@@ -46,9 +46,11 @@ function CustomerDetails() {
   }, [snackbarStatus]);
 
   const getCustomerById = async () => {
-    await API.get(`/${id}`)
+    await API.get(`/customer/${id}`)
       .then((resp) => {
+        console.log(resp)
         setCustomer(resp.data);
+        document.title = `${resp.data.name} ${resp.data.lastName}`
         setStatus(resp.status);
       })
       .catch((err) => {

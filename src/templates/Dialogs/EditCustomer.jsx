@@ -30,7 +30,7 @@ import {
     }, [])
 
     const getCustomer = async () => {
-      await API.get(`/${id}`).then(resp => {
+      await API.get(`/customer/${id}`).then(resp => {
         setCustomerId(resp.data)
       })
     }
@@ -39,7 +39,8 @@ import {
       const value = e.target.value;
       setCustomerId({...customerId, payment: value})
     };
-  
+    
+
     const putCustomer = () => {
         const data = {
           name: customer.name,
@@ -48,7 +49,7 @@ import {
           payment: customer.payment
         }
 
-        API.put(`/${id}`, data).then((resp) => {
+        API.put(`/customer/${id}`, data).then((resp) => {
           setDialogOpen(false);
           setSnackbarOpen(true);
           setSnackbarStatus(resp.status);

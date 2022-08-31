@@ -31,11 +31,11 @@ function CustomerCard({ customer, setRefresh, setSnackbarOpen, setSnackbarMsg, s
   };
 
   const handleClickRedirect = () => {
-    navigate(`/${customer._id}`)
+    navigate(`customer/${customer._id}`)
   }
 
   const handleDeleteCustomer = () => {
-    API.delete(`/${customer._id}`)
+    API.delete(`/customer/${customer._id}`)
       .then((resp) => {
         setOpen(false);
         setRefresh(true)
@@ -75,6 +75,7 @@ function CustomerCard({ customer, setRefresh, setSnackbarOpen, setSnackbarMsg, s
           {customer.payment === false && (
             <Typography variant="body2">Pagamento: Não efetuado</Typography>
           )}
+          <Typography variant="body2">CPF: {customer.cpf}</Typography>
           <Typography variant="body2">Pets: {customer.pets.length}</Typography>
         </CardContent>
       </CardActionArea>

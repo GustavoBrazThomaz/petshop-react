@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "@mui/system";
-import {
-  Alert,
-  Button,
-  Card,
-  CircularProgress,
-  Dialog,
-  Grid,
-  Snackbar,
-  Typography,
-} from "@mui/material";
+import { Alert, Button, Card, CircularProgress, Dialog, Grid, Snackbar, Typography } from "@mui/material";
 import CustomerCard from "../../templates/Cards/CustomerCard";
 import API from "../../hooks/API";
 import CreateCustomer from "../../templates/Dialogs/CreateCustomer";
@@ -24,7 +15,6 @@ function Home() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [status, setStatus] = useState(0)
 
- 
   useEffect(() => {
     document.title = 'PetShop'
     setRefresh(true);
@@ -49,7 +39,7 @@ function Home() {
   }, [snackbarStatus]);
 
   const getCustomers = async () => {
-    await API.get("").then((resp) => {
+    await API.get("/customer").then((resp) => {
       setStatus(resp.status);
       setCustomers(resp.data);
     });

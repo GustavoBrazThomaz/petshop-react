@@ -47,12 +47,11 @@ function CreatePet({
       age: parseInt(event.age),
       genger: event.genger,
       weight: parseInt(event.weight),
-      height: parseInt(event.height),
       service: event.service,
       species: event.species,
     };
 
-    API.post(`/pet/${id}`, pet)
+    API.post(`/customer/pet/${id}`, pet)
       .then((resp) => {
         setDialogOpen(false);
         setSnackbarOpen(true);
@@ -71,16 +70,14 @@ function CreatePet({
     <>
       <div className="container-dialog">
         <DialogTitle style={{ textAlign: "center" }}>
-          Adicionar Cliente
+          Adicionar Pet
         </DialogTitle>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogContent style={{ display: "flex", flexDirection: "column" }}>
             <TextField
               {...register("name", { required: true })}
               label="Nome"
-              variant="outlined"
-              style={{ margin: "1rem 0" }}
-            />
+              variant="outlined"/>
             <TextField
               {...register("age", { required: true })}
               label="Idade"
@@ -88,8 +85,8 @@ function CreatePet({
               style={{ margin: "1rem 0" }}
             />
 
-            <InputLabel id="select-label-genger" style={{ marginTop: "1rem" }}>
-              Pagamento
+            <InputLabel id="select-label-genger">
+              Gênero
             </InputLabel>
             <Select
               {...register("genger", { required: true })}
@@ -108,14 +105,8 @@ function CreatePet({
               variant="outlined"
               style={{ margin: "1rem 0" }}
             />
-            <TextField
-              {...register("height", { required: true })}
-              label="Altura"
-              variant="outlined"
-              style={{ margin: "1rem 0" }}
-            />
 
-            <InputLabel id="select-label-service" style={{ marginTop: "1rem" }}>
+            <InputLabel id="select-label-service">
               Tratamento
             </InputLabel>
             <Select
