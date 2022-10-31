@@ -1,4 +1,4 @@
-import {Alert, Button, Card, CardContent, CircularProgress, Dialog, Grid, Snackbar, Typography,
+import { Button, Card, CardContent, CircularProgress, Dialog, Grid, Typography,
 } from "@mui/material";
 import { Container } from "@mui/system";
 import React, { useEffect, useState } from "react";
@@ -9,49 +9,47 @@ import PetCard from "../../templates/Cards/PetCard";
 import PetsIcon from "@mui/icons-material/Pets";
 import EditIcon from "@mui/icons-material/Edit";
 import EditCustomer from "../../templates/Dialogs/EditCustomer";
+import SnackbarTemplate from "../../templates/Snackbar/SnackbarTemplate";
+import { useDispatch, useSelector } from "react-redux";
+import { refreshPage } from "../../store/reducers/Refresh.store";
+import { createPetDialog, editCustomerDialog, setCustomerId } from "../../store/reducers/Dialog.store";
+import { RootState } from "../../store";
+import { Customer } from "../../interfaces/customer";
 
 function CustomerDetails() {
   const { id } = useParams();
-  const [customer, setCustomer] = useState([]);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMsg, setSnackbarMsg] = useState("");
-  const [snackbarStatus, setSnackbarStatus] = useState(0);
-  const [snackbarColor, setSnackbarColor] = useState("info");
-  const [refresh, setRefresh] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogOpenEdit, setDialogOpenEdit] = useState(false);
-  const [status, setStatus] = useState(1);
+  const [customer, setCustomer] = useState<Customer>({
+    name: '',
+    lastName: '',
+    cpf: 0,
+    phone: 0,
+    payment: false
+  });
+  const [status, setStatus] = useState<number>(1)
+
+  const dispatch = useDispatch();
+  const store = useSelector((state: RootState) => state.rootReducer);
+  const dialog = store.dialog;
+  const refresh = store.refresh;
 
   useEffect(() => {
-    setRefresh(true);
+    dispatch(refreshPage());
+    if(id)dispatch(setCustomerId(id))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     getCustomerById();
-    setRefresh(false);
+    //dispatch(refreshPage());
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh]);
-
-  useEffect(() => {
-    if (snackbarStatus === 200) {
-      setSnackbarColor("success");
-      return;
-    }
-    if (snackbarStatus === 201) {
-      setSnackbarColor("success");
-      return;
-    } else {
-      setSnackbarColor("error");
-    }
-  }, [snackbarStatus]);
+  }, [refresh.refresh]);
 
   const getCustomerById = async () => {
     await API.get(`/customer/${id}`)
       .then((resp) => {
-        console.log(resp)
+        setStatus(resp.status);
         setCustomer(resp.data);
         document.title = `${resp.data.name} ${resp.data.lastName}`
-        setStatus(resp.status);
       })
       .catch((err) => {
         setStatus(err.response.status);
@@ -104,19 +102,22 @@ function CustomerDetails() {
                     justifyContent: "center",
                   }}
                 >
+                  {
                   <Button
                     style={{ marginBottom: "5px" }}
                     variant="outlined"
-                    onClick={() => setDialogOpen(true)}
+                    onClick={() => dispatch(createPetDialog())}
                     endIcon={<PetsIcon />}
                   >
                     Adicionar Pet
                   </Button>
+                  }
+
 
                   <Button
                     color="warning"
                     variant="outlined"
-                    onClick={() => setDialogOpenEdit(true)}
+                    onClick={() => dispatch(editCustomerDialog(id))}
                     endIcon={<EditIcon />}
                   >
                     Editar Cliente
@@ -124,73 +125,50 @@ function CustomerDetails() {
                 </div>
               </CardContent>
             </Card>
-            {customer.pets.length === 0 && (
-              <>
-                <div style={{height: '80vh', textAlign: 'center'}}>
-                <h1 style={{marginTop: '5rem', color: '#ccc'}}>Você não cadastrou nenhum pet ainda</h1>
-                </div>
-              </>
-            )}
-              {customer.pets.length > 0 && (
-              <Grid
-                style={{ marginTop: "0.3rem" }}
-                container
-                spacing={{ xs: 2, md: 3 }}
-                columns={{ xs: 4, sm: 8, md: 12 }}
-              >
-                {customer.pets.map((resp, index) => (
+            
+            {customer.pets !== undefined && (
+                <>
+                {customer.pets.length === 0 && (
                   <>
-                    <Grid item xs={12} sm={4} md={4}>
-                      <PetCard
-                        pet={resp}
-                        index={index}
-                        id={customer._id}
-                        setRefresh={setRefresh}
-                        setSnackbarOpen={setSnackbarOpen}
-                        setSnackbarMsg={setSnackbarMsg}
-                        setSnackbarStatus={setSnackbarStatus}
-                      />
-                    </Grid>
+                    <div style={{height: '80vh', textAlign: 'center'}}>
+                    <h1 style={{marginTop: '5rem', color: '#ccc'}}>Você não cadastrou nenhum pet ainda</h1>
+                    </div>
                   </>
-                ))}
-              </Grid>
+                )}
+
+                  {customer.pets.length > 0 && (
+                  <Grid
+                    style={{ marginTop: "0.3rem" }}
+                    container
+                    spacing={{ xs: 2, md: 3 }}
+                    columns={{ xs: 4, sm: 8, md: 12 }}
+                  >
+                      {customer.pets.map((resp, index) => (
+                        <>
+                          <Grid item xs={12} sm={4} md={4}>
+                            <PetCard index={index} id={id} pet={resp}/>
+                          </Grid>
+                        </>
+                      ))}
+                    </Grid>)}
+                    </>
             )}
 
-            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-              <CreatePet
-                setDialogOpen={setDialogOpen}
-                setRefresh={setRefresh}
-                setSnackbarOpen={setSnackbarOpen}
-                setSnackbarMsg={setSnackbarMsg}
-                setSnackbarStatus={setSnackbarStatus}
-                id={customer._id}
-              />
+            <Dialog open={dialog.openCreatePet} onClose={() => dispatch(createPetDialog())}>
+              <CreatePet/>
             </Dialog>
 
             <Dialog
-              open={dialogOpenEdit}
-              onClose={() => setDialogOpenEdit(false)}
+              open={dialog.openEditCustomer}
+              onClose={() => dispatch(editCustomerDialog(''))}
             >
-              <EditCustomer
-                setDialogOpen={setDialogOpenEdit}
-                setRefresh={setRefresh}
-                setSnackbarOpen={setSnackbarOpen}
-                setSnackbarMsg={setSnackbarMsg}
-                setSnackbarStatus={setSnackbarStatus}
-                id={customer._id}
-              />
+              <EditCustomer/>
             </Dialog>
           </>
         )}
       </Container>
-      <Snackbar
-        open={snackbarOpen}
-        onClose={() => setSnackbarOpen(false)}
-        autoHideDuration={3000}
-      >
-        <Alert severity={snackbarColor}>{snackbarMsg}</Alert>
-      </Snackbar>
-    </>
+      <SnackbarTemplate/>
+      </>
   );
 }
 

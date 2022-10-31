@@ -8,60 +8,56 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import InputMask from "react-input-mask";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import API from "../../hooks/API";
 import "./dialog.css";
+import UsePhoneFormat from "../../hooks/UsePhoneFormat";
+import UseCpfFormat from "../../hooks/UseCpfFormat";
+import { PatternFormat } from "react-number-format";
+import { createCustomerDialog } from "../../store/reducers/Dialog.store";
+import { useDispatch } from "react-redux";
+import { refreshPage } from "../../store/reducers/Refresh.store";
+import { openSnackbar, snackbarMsg, snackbarStatus } from "../../store/reducers/Snackbar.store";
+import SnackbarTemplate from "../Snackbar/SnackbarTemplate";
 
-function CreateCustomer({
-  setDialogOpen,
-  setRefresh,
-  setSnackbarOpen,
-  setSnackbarMsg,
-  setSnackbarStatus,
-}) {
+function CreateCustomer() {
   const { register, handleSubmit } = useForm();
   const [payment, setPayment] = useState(false);
-  
+  const [cpf, setCpf] = useState('')
+  const [phone, setPhone] = useState('')
 
-  const changeSelect = (e) => {
+  const dispatch = useDispatch();
+
+  const changeSelect = (e: any) => {
     const value = e.target.value;
-    setPayment(value);
+    if(value === 'true')setPayment(true)
+    if(value === 'false')setPayment(false)
+    return
   };
+  
+  const onSubmit = async (e: any) => {
 
-  const onSubmit = async (e) => {
-
-    const splitDot = e.cpf.split('.')
-    const joinString = splitDot.join('')
-    const splitHifen = joinString.split('-')
-    const joinToString = splitHifen.join('')
-    const cpfNumber = parseInt(joinToString)
-
-    const split = e.phone.split('-')
-    const join = split.join('')
-    const phoneNumber = parseInt(join)
-
-    const userRegister = {
+    const userCreate = {
         name: e.name,
         lastName: e.lastName,
-        phone: phoneNumber,
-        cpf: cpfNumber,
+        phone: UsePhoneFormat(phone),
+        cpf: UseCpfFormat(cpf),
         payment: e.payment
     }
-
-    API.post("/customer", userRegister)
+    API.post("/customer", userCreate)
     .then((resp) => {
-      setDialogOpen(false);
-      setSnackbarOpen(true);
-      setSnackbarStatus(resp.status);
-      setSnackbarMsg("Cliente criado com sucesso!");
-      setRefresh(true);
+      dispatch(createCustomerDialog())
+      dispatch(openSnackbar())
+      dispatch(snackbarStatus(resp.status))
+      dispatch(snackbarMsg("Cliente criado com sucesso!"))
+      dispatch(refreshPage())
+      console.log(resp.data)
     })
     .catch((err) => {
-      setSnackbarStatus(err.response.status);
-      setSnackbarMsg(err.response.data.msg);
-      setSnackbarOpen(true);
+      dispatch(snackbarStatus(err.response.status))
+      dispatch(snackbarMsg(err.response.data.msg))
+      dispatch(openSnackbar())
     });
 }
 
@@ -85,33 +81,25 @@ function CreateCustomer({
               variant="outlined"
               style={{ margin: "1rem 0" }}
             />
-            <InputMask
-              mask="99-99999-9999"
-              {...register("phone", { required: true })}
-            >
-              {(inputProps) => (
-                <TextField
-                  {...inputProps}
-                  label="Telefone"
-                  type="tel"
-                  disableUnderline
-                />
-              )}
-            </InputMask>
+          <PatternFormat
+            label="Telefone"
+            format="##-#####-####"
+            mask="_"
+            onChange={(e: any) => setPhone(e.target.value)}
+            required={true}
+            customInput={TextField}
+            style={{ marginBottom: "1rem", marginTop: "0.5rem" }}
+          />
 
-            <InputMask
-              mask="999.999.999-99"
-              {...register("cpf", { required: true })}
-            >
-              {(inputProps) => (
-                <TextField
-                  {...inputProps}
-                  style={{ margin: "1rem 0" }}
-                  variant="outlined"
-                  label="CPF"
-                ></TextField>
-              )}
-            </InputMask>
+          <PatternFormat
+            label="Cpf"
+            format="###.###.###-##"
+            mask="_"
+            onChange={(e: any) => setCpf(e.target.value)}
+            required={true}
+            customInput={TextField}
+            style={{ marginBottom: "1rem", marginTop: "0.5rem" }}
+          />
 
             <InputLabel id="demo-simple-select-label">
               Pagamento
@@ -123,8 +111,8 @@ function CreateCustomer({
               value={payment}
               onChange={(e) => changeSelect(e)}
             >
-              <MenuItem value={true}>Sim</MenuItem>
-              <MenuItem value={false}>Não</MenuItem>
+              <MenuItem value={'true'}>Efetuado</MenuItem>
+              <MenuItem value={'false'}>Não Efetuado</MenuItem>
             </Select>
           </DialogContent>
           <DialogActions
@@ -140,13 +128,14 @@ function CreateCustomer({
             <Button
               variant="outlined"
               color="warning"
-              onClick={() => setDialogOpen(false)}
+              onClick={() => dispatch(createCustomerDialog())}
             >
               Cancelar
             </Button>
           </DialogActions>
         </form>
       </div>
+          <SnackbarTemplate/>
     </>
   );
 }

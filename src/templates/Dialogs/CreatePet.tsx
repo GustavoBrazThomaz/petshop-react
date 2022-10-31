@@ -10,59 +10,53 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import API from "../../hooks/API";
+import { RootState } from "../../store";
+import { createPetDialog } from "../../store/reducers/Dialog.store";
+import { refreshPage } from "../../store/reducers/Refresh.store";
+import { openSnackbar, snackbarMsg, snackbarStatus } from "../../store/reducers/Snackbar.store";
+import { NumericFormat } from 'react-number-format';
 import "./dialog.css";
+import UseWeightFormat from "../../hooks/UseWeightFormat";
 
-function CreatePet({
-  setDialogOpen,
-  setRefresh,
-  setSnackbarOpen,
-  setSnackbarMsg,
-  setSnackbarStatus,
-  id,
-}) {
+function CreatePet() {
   const { register, handleSubmit } = useForm();
-  const [genger, setGenger] = useState("female");
-  const [service, setService] = useState("bath");
-  const [species, setSpecies] = useState("dog");
+  const [ selectMenuValue, setSelectMenuvalue ] = useState({
+    weight: '',
+    genger: 'female',
+    species: 'dog',
+    service: 'bath'
+  })
+  const dispatch = useDispatch();
+  const store = useSelector((state: RootState) => state.rootReducer);
+  const dialog = store.dialog;
+  const id = dialog.customerId;
 
-  const changeSelectGenger = (e) => {
-    const value = e.target.value;
-    setGenger(value);
-  };
+  const onSubmit = (event: any) => {
 
-  const changeSelectService = (e) => {
-    const value = e.target.value;
-    setService(value);
-  };
-
-  const changeSelectSpecies = (e) => {
-    const value = e.target.value;
-    setSpecies(value);
-  };
-
-  const onSubmit = (event) => {
+    
     const pet = {
       name: event.name,
       age: parseInt(event.age),
-      genger: event.genger,
-      weight: parseInt(event.weight),
-      service: event.service,
-      species: event.species,
+      genger: selectMenuValue.genger,
+      weight: UseWeightFormat(selectMenuValue.weight),
+      service: selectMenuValue.service,
+      species: selectMenuValue.species,
     };
 
     API.post(`/customer/pet/${id}`, pet)
       .then((resp) => {
-        setDialogOpen(false);
-        setSnackbarOpen(true);
-        setSnackbarStatus(resp.status);
-        setSnackbarMsg("Cliente criado com sucesso!");
-        setRefresh(true);
+        dispatch(createPetDialog());
+        dispatch(openSnackbar());
+        dispatch(snackbarStatus(resp.status));
+        dispatch(snackbarMsg("Pet cadastrado com sucesso!"))
+        dispatch(refreshPage());
       })
       .catch((err) => {
-        setSnackbarStatus(err.response.status);
-        setSnackbarMsg(err.response.data.msg);
-        setSnackbarOpen(true);
+        dispatch(snackbarStatus(err.response.status))
+        dispatch(snackbarMsg(err.response.data.msg))
+        dispatch(openSnackbar())
       });
   };
 
@@ -92,19 +86,14 @@ function CreatePet({
               {...register("genger", { required: true })}
               labelId="select-label-genger"
               id="demo-simple-select"
-              value={genger}
-              onChange={(e) => changeSelectGenger(e)}
+              value={selectMenuValue.genger}
+              onChange={(e: any) => setSelectMenuvalue({...selectMenuValue, genger: e.target.value})}
             >
               <MenuItem value={"female"}>Fêmea</MenuItem>
               <MenuItem value={"male"}>Macho</MenuItem>
             </Select>
 
-            <TextField
-              {...register("weight", { required: true })}
-              label="Peso"
-              variant="outlined"
-              style={{ margin: "1rem 0" }}
-            />
+            <NumericFormat label="Peso" suffix={' Kg'} onChange={(e: any) => setSelectMenuvalue({...selectMenuValue, weight: e.target.value})} required={true} customInput={TextField} style={{marginBottom: '1rem', marginTop: '0.5rem'}}/>
 
             <InputLabel id="select-label-service">
               Tratamento
@@ -113,12 +102,13 @@ function CreatePet({
               {...register("service", { required: true })}
               labelId="select-label-service"
               id="demo-simple-select"
-              value={service}
-              onChange={(e) => changeSelectService(e)}
+              value={selectMenuValue.service}
+              onChange={(e: any) => setSelectMenuvalue({...selectMenuValue, service: e.target.value})}
             >
               <MenuItem value={"bath"}>Banho</MenuItem>
               <MenuItem value={"shear"}>Tosa</MenuItem>
               <MenuItem value={"bath and shear"}>Banho e Tosa</MenuItem>
+              <MenuItem value={"other"}>Outros</MenuItem>
             </Select>
 
             <InputLabel id="select-label-species" style={{ marginTop: "1rem" }}>
@@ -128,8 +118,8 @@ function CreatePet({
               {...register("species", { required: true })}
               labelId="select-label-species"
               id="demo-simple-select"
-              value={species}
-              onChange={(e) => changeSelectSpecies(e)}
+              value={selectMenuValue.species}
+              onChange={(e) => setSelectMenuvalue({...selectMenuValue, species: e.target.value})}
             >
               <MenuItem value={"dog"}>Cachorro</MenuItem>
               <MenuItem value={"cat"}>Gato</MenuItem>
@@ -149,7 +139,7 @@ function CreatePet({
             <Button
               variant="outlined"
               color="warning"
-              onClick={() => setDialogOpen(false)}
+              onClick={() => dispatch(createPetDialog())}
             >
               Cancelar
             </Button>

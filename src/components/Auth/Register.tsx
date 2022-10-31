@@ -1,59 +1,44 @@
-import { Alert, Avatar, Button, Card, CardActions, CardContent, Snackbar, TextField, Typography } from '@mui/material'
+import { Avatar, Button, Card, CardActions, CardContent, TextField, Typography } from '@mui/material'
 import PetsIcon from '@mui/icons-material/Pets';
 import { Container } from '@mui/system'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import InputMask from "react-input-mask";
 import { useForm } from 'react-hook-form';
 import API from '../../hooks/API';
+import { PatternFormat } from 'react-number-format';
+import UseCpfFormat from '../../hooks/UseCpfFormat';
+import SnackbarTemplate from '../../templates/Snackbar/SnackbarTemplate';
+import { useDispatch } from 'react-redux';
+import { openSnackbar, snackbarMsg, snackbarStatus } from '../../store/reducers/Snackbar.store';
 
 function Register() {
+    document.title = 'Criar Conta'
+
     const { register, handleSubmit } = useForm();
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMsg, setSnackbarMsg] = useState("");
-    const [snackbarStatus, setSnackbarStatus] = useState(0);
-    const [snackbarColor, setSnackbarColor] = useState("info");
+
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     
-    useEffect(() => {
-        document.title = 'Criar Conta'
+    let cpf = ""
 
-        if (snackbarStatus === 200) {
-          setSnackbarColor("success");
-          return;
-        }
-        if (snackbarStatus === 201) {
-          setSnackbarColor("success");
-          return;
-        } else {
-          setSnackbarColor("error");
-        }
-      }, [snackbarStatus]);
-
-    const onSubmit = async (e) => {
-        const splitDot = e.cpf.split('.')
-        const joinString = splitDot.join('')
-        const splitHifen = joinString.split('-')
-        const joinToString = splitHifen.join('')
-        const cpfNumber = parseInt(joinToString)
-
+    const onSubmit = async (e: any) => {
         const userRegister = {
             name: e.name,
-            cpf: cpfNumber,
+            cpf: UseCpfFormat(cpf),
             email: e.email,
             password: e.password,
             confirmPassword: e.confirmPassword
         }
 
         API.post('/auth/register', userRegister).then(resp => {
-          setSnackbarStatus(resp.status)
-          setSnackbarMsg(resp.data.msg)
-          setSnackbarOpen(true)
+          dispatch(snackbarStatus((resp.status)))
+          dispatch(snackbarMsg((resp.data.msg)))
+          dispatch(openSnackbar())
           navigate('/Login')
       }).catch(err => {
-          setSnackbarStatus(err.response.status)
-          setSnackbarMsg(err.response.data[0])
-          setSnackbarOpen(true)
+          dispatch(snackbarStatus((err.response.status)))  
+          dispatch(snackbarMsg(err.response.data[0]))
+          dispatch(openSnackbar())
       })
     }
 
@@ -69,9 +54,7 @@ function Register() {
                 <CardContent style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                     <TextField style={{marginBottom: '1rem'}} variant='outlined' label='Nome' {...register("name",{required: true})}></TextField>
 
-                    <InputMask mask="999.999.999-99" maskChar={null} alwaysShowMask={false} {...register("cpf",{required: true})}>
-                        {(inputProps) => <TextField {...inputProps} style={{marginBottom: '1rem'}} variant='outlined' label='CPF'></TextField>}
-                    </InputMask>
+                    <PatternFormat label="Cpf" format='###.###.###-##' mask="_" onChange={(e: any) => cpf = e.target.value} required={true} customInput={TextField} style={{marginBottom: '1rem', marginTop: '0.5rem'}}/>
                    
                     <TextField style={{marginBottom: '1rem'}} variant='outlined' label='Email' {...register("email",{required: true})}></TextField>
                     <TextField type='password' style={{marginBottom: '1rem'}} variant='outlined' label='Senha' {...register("password",{required: true})}></TextField>
@@ -84,14 +67,7 @@ function Register() {
             </form>
         </Card>
         </Container>
-
-        <Snackbar
-        open={snackbarOpen}
-        onClose={() => setSnackbarOpen(false)}
-        autoHideDuration={3000}
-      >
-        <Alert severity={snackbarColor}>{snackbarMsg}</Alert>
-      </Snackbar>
+        <SnackbarTemplate/>
     </>
   )
 }

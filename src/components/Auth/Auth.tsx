@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import Login from "./Login";
 
 const useAuth = () => {
-
     const token = window.localStorage.getItem('token')
 
     if(token){

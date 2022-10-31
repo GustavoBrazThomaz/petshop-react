@@ -1,42 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "@mui/system";
-import { Alert, Button, Card, CircularProgress, Dialog, Grid, Snackbar, Typography } from "@mui/material";
+import { Button, Card, CircularProgress, Dialog, Grid, Typography } from "@mui/material";
 import CustomerCard from "../../templates/Cards/CustomerCard";
 import API from "../../hooks/API";
 import CreateCustomer from "../../templates/Dialogs/CreateCustomer";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { createCustomerDialog } from "../../store/reducers/Dialog.store";
+import SnackbarTemplate from "../../templates/Snackbar/SnackbarTemplate";
 
 function Home() {
   const [customers, setCustomers] = useState([]);
-  const [refresh, setRefresh] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMsg, setSnackbarMsg] = useState("");
-  const [snackbarStatus, setSnackbarStatus] = useState(0);
-  const [snackbarColor, setSnackbarColor] = useState("info");
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [status, setStatus] = useState(0)
 
+  const dispatch = useDispatch();
+  const store = useSelector((state: RootState) => state.rootReducer);
+  const dialog = store.dialog;
+  const refresh = store.refresh;
+
+  document.title = 'PetShop'
   useEffect(() => {
-    document.title = 'PetShop'
-    setRefresh(true);
+    getCustomers();
   }, []);
 
   useEffect(() => {
     getCustomers();
-    setRefresh(false);
-  }, [refresh]);
-
-  useEffect(() => {
-    if (snackbarStatus === 200) {
-      setSnackbarColor("success");
-      return;
-    }
-    if (snackbarStatus === 201) {
-      setSnackbarColor("success");
-      return;
-    } else {
-      setSnackbarColor("error");
-    }
-  }, [snackbarStatus]);
+  }, [refresh.refresh]);
 
   const getCustomers = async () => {
     await API.get("/customer").then((resp) => {
@@ -44,7 +33,7 @@ function Home() {
       setCustomers(resp.data);
     });
   };
-
+  
   return (
     <>
       <Container style={{ marginTop: "5rem" }}>
@@ -68,7 +57,7 @@ function Home() {
               <Button
                 style={{ marginTop: "3rem", color: "white" }}
                 variant="outlined"
-                onClick={() => setDialogOpen(true)}
+                onClick={() => dispatch(createCustomerDialog())}
               >
                 Adicionar Cliente
               </Button>
@@ -81,7 +70,7 @@ function Home() {
               <Button
                 variant="outlined"
                 color="primary"
-                onClick={() => setDialogOpen(true)}
+                onClick={() => dispatch(createCustomerDialog())}
               >
                 Adicionar Cliente
               </Button>
@@ -97,36 +86,17 @@ function Home() {
                   <Grid item xs={12} sm={4} md={4}>
                     <Card>
                       <CustomerCard
-                        customer={data}
-                        setRefresh={setRefresh}
-                        setSnackbarOpen={setSnackbarOpen}
-                        setSnackbarMsg={setSnackbarMsg}
-                        setSnackbarStatus={setSnackbarStatus}
-                      />
+                        props={data}/>
                     </Card>
                   </Grid>
                 </>
               ))}
             </Grid>
 
-            <Snackbar
-              open={snackbarOpen}
-              onClose={() => setSnackbarOpen(false)}
-              autoHideDuration={3000}
-            >
-              <Alert severity={snackbarColor}>{snackbarMsg}</Alert>
-            </Snackbar>
           </>
         )}
-
-        <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-          <CreateCustomer
-            setDialogOpen={setDialogOpen}
-            setRefresh={setRefresh}
-            setSnackbarOpen={setSnackbarOpen}
-            setSnackbarMsg={setSnackbarMsg}
-            setSnackbarStatus={setSnackbarStatus}
-          />
+        <Dialog open={dialog.openCreateCustomer} onClose={() => dispatch(createCustomerDialog())}>
+          <CreateCustomer/>
         </Dialog>
         </>
         }{ status !== 200 &&
@@ -135,6 +105,7 @@ function Home() {
           </div>
         }
       </Container>
+      <SnackbarTemplate/>
     </>
   );
 }
