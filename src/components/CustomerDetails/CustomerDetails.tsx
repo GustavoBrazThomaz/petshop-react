@@ -13,7 +13,7 @@ import SnackbarTemplate from "../../templates/Snackbar/SnackbarTemplate";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshPage } from "../../store/reducers/Refresh.store";
 import { createPetDialog, editCustomerDialog, setCustomerId } from "../../store/reducers/Dialog.store";
-import { RootState } from "../../store";
+import { RootState } from "../../store/store";
 import { Customer } from "../../interfaces/customer";
 
 function CustomerDetails() {
@@ -80,18 +80,19 @@ function CustomerDetails() {
                 style={{ display: "flex", justifyContent: "space-between" }}
               >
                 <div>
-                  <Typography gutterBottom variant="h6" component="div">
-                    Nome: {customer.name} {customer.lastName}
+                  <Typography className='text-title' gutterBottom variant="h6" component="div">
+                    Cliente: <span className="text-content">{customer.name} {customer.lastName}</span>
                   </Typography>
-                  <Typography variant="body2">
-                    Telefone: {customer.phone}
+                  <Typography className='text-title' variant="body2">
+                    Telefone: <span className="text-content">{customer.phone}</span>
                   </Typography>
+                  <Typography className='text-title' variant="body2">CPF: <span className="text-content">{customer.cpf}</span></Typography>
                   {customer.payment === true && (
-                    <Typography variant="body2">Pagamento: Efetuado</Typography>
+                    <Typography className='text-title' variant="body2">Pagamento: <span className="text-content">Efetuado</span></Typography>
                   )}
                   {customer.payment === false && (
-                    <Typography variant="body2">
-                      Pagamento: Não efetuado
+                    <Typography className='text-title' variant="body2">
+                      Pagamento: <span className="text-content">Não efetuado</span>
                     </Typography>
                   )}
                 </div>
@@ -105,9 +106,10 @@ function CustomerDetails() {
                   {
                   <Button
                     style={{ marginBottom: "5px" }}
-                    variant="outlined"
+                    variant="contained"
                     onClick={() => dispatch(createPetDialog())}
                     endIcon={<PetsIcon />}
+                    className="button-primary"
                   >
                     Adicionar Pet
                   </Button>
@@ -116,9 +118,10 @@ function CustomerDetails() {
 
                   <Button
                     color="warning"
-                    variant="outlined"
+                    variant="contained"
                     onClick={() => dispatch(editCustomerDialog(id))}
                     endIcon={<EditIcon />}
+                    
                   >
                     Editar Cliente
                   </Button>
@@ -131,7 +134,7 @@ function CustomerDetails() {
                 {customer.pets.length === 0 && (
                   <>
                     <div style={{height: '80vh', textAlign: 'center'}}>
-                    <h1 style={{marginTop: '5rem', color: '#ccc'}}>Você não cadastrou nenhum pet ainda</h1>
+                    <h1 style={{marginTop: '5rem', color: '#fff'}}>Nenhum pet cadastrado</h1>
                     </div>
                   </>
                 )}

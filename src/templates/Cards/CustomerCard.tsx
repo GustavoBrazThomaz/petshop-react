@@ -10,9 +10,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import DeleteCard from "../Dialogs/DeleteCard";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState } from "../../store/store";
 import { deleteCustomerDialog } from "../../store/reducers/Dialog.store";
 import { PropsCustomerCard } from "../../interfaces/customer";
+import CustomerCardStyle from "./CustomerCardStyle";
 
 function CustomerCard(props: PropsCustomerCard) {
 
@@ -33,12 +34,9 @@ function CustomerCard(props: PropsCustomerCard) {
   }
   return (
     <>
+    <CustomerCardStyle/>
       <div
-        style={{
-          background: "#363534",
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
+        className="card-navbar"
       >
         <IconButton
           aria-label="delete"
@@ -52,20 +50,20 @@ function CustomerCard(props: PropsCustomerCard) {
       <CardActionArea onClick={handleClickRedirect}>
         <CardContent>
         
-            <Typography gutterBottom variant="h6" component="div">
-            Nome: {customer.name} {customer.lastName}
+            <Typography className='text-title' gutterBottom variant="h6" component="div">
+            Cliente: <span className="text-content">{customer.name} {customer.lastName}</span>
           </Typography>
-          <Typography variant="body2">Telefone: {customer.phone}</Typography>
+          <Typography className='text-title' variant="body2">Telefone: <span className="text-content">{customer.phone}</span></Typography>
+          <Typography className='text-title' variant="body2">CPF: <span className="text-content">{customer.cpf}</span></Typography>
           {customer.payment === true && (
-            <Typography variant="body2">Pagamento: Efetuado</Typography>
+            <Typography className='text-title' variant="body2">Pagamento: <span className="text-content">Efetuado</span></Typography>
           )}
           {customer.payment === false && (
-            <Typography variant="body2">Pagamento: Não efetuado</Typography>
+            <Typography className='text-title' variant="body2">Pagamento: <span className="text-content">Não efetuado</span></Typography>
           )}
-          <Typography variant="body2">CPF: {customer.cpf}</Typography>
           {customer.pets &&
             <>
-            <Typography variant="body2">Pets: {customer.pets.length}</Typography>
+            <Typography className='text-title' variant="body2">Pets: <span className="text-content">{customer.pets.length}</span></Typography>
             </>}
 
           

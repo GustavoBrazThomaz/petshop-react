@@ -10,6 +10,8 @@ import SnackbarTemplate from '../../templates/Snackbar/SnackbarTemplate';
 import { openSnackbar, snackbarMsg, snackbarStatus } from '../../store/reducers/Snackbar.store';
 import API from '../../hooks/API';
 import UseCpfFormat from '../../hooks/UseCpfFormat';
+import LoginStyle from './LoginStyle';
+import LoginIcon from '@mui/icons-material/Login';
 
 function Login() {
 
@@ -43,28 +45,29 @@ function Login() {
     
   return (
     <>
-    <Container style={{marginTop: '5rem', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+    <LoginStyle/>
+    <div className="login-body-container">
+    <Container className='login-container'>
         <Card style={{width: '300px'}}>
             <form onSubmit={handleSubmit(onSubmit)}> 
-                <div style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', padding: '1rem'}}>
-                <Avatar sx={{ bgcolor: '#327da8', marginTop: '1rem', color: '#fff' }}><PetsIcon/></Avatar>
+                <div className='login-card-container'>
+                <Avatar className="login-avatar" ><PetsIcon/></Avatar>
                 <Typography style={{marginTop: '1rem'}} variant="h5">Login</Typography>
                 </div>
-                <CardContent style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-
-                    <PatternFormat label="Cpf" format='###.###.###-##' mask="_" onChange={(e: any) => cpf = e.target.value} required={true} customInput={TextField} style={{marginBottom: '1rem', marginTop: '0.5rem'}}/>
-                    <TextField required={true} type='password' style={{marginBottom: '2rem', marginTop: '0.5rem'}} variant='outlined' label='Senha' {...register("password",{required: true})}></TextField>
-
-                    <Typography>Ainda não possui uma conta?</Typography>
-                    <Typography><Link to='/Register' style={{color: 'white'}}>Criar conta</Link></Typography>
+                <CardContent className='login-card-content'>
+                    <PatternFormat label="Cpf" format='###.###.###-##' mask="_" onChange={(e: any) => cpf = e.target.value} required={true} customInput={TextField}/>
+                    <TextField className='login-input' required={true} type='password' variant='outlined' label='Senha' {...register("password",{required: true})}></TextField>
+                    <Typography className='login-input'>Ainda não possui uma conta?</Typography>
+                    <Typography><Link to='/Register' className='login-link' >Criar conta</Link></Typography>
                 </CardContent>
 
-                <CardActions style={{padding: '2rem 2rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                    <Button variant='outlined' type='submit' style={{width: '150px'}}>Logar</Button>
+                <CardActions className='login-card-action'>
+                    <Button className='login-button' variant='outlined' type='submit' endIcon={<LoginIcon/>}>Entrar</Button>
                 </CardActions>
             </form>
         </Card>
         </Container>
+        </div>
         <SnackbarTemplate/>       
     </>
   )

@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 import API from "../../hooks/API";
 import "./dialog.css";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState } from "../../store/store";
 import { editCustomerDialog } from "../../store/reducers/Dialog.store";
 import {
   openSnackbar,

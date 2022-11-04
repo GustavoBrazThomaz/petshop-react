@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import API from "../../hooks/API";
-import { RootState } from "../../store";
+import { RootState } from "../../store/store";
 import { createPetDialog } from "../../store/reducers/Dialog.store";
 import { refreshPage } from "../../store/reducers/Refresh.store";
 import { openSnackbar, snackbarMsg, snackbarStatus } from "../../store/reducers/Snackbar.store";
@@ -133,11 +133,11 @@ function CreatePet() {
               padding: "1rem",
             }}
           >
-            <Button type="submit" variant="outlined" color="primary">
+            <Button type="submit" variant="contained" color="primary">
               Adicionar
             </Button>
             <Button
-              variant="outlined"
+              variant="contained"
               color="warning"
               onClick={() => dispatch(createPetDialog())}
             >

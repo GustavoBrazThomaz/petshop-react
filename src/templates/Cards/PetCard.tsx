@@ -11,7 +11,7 @@ import React from "react";
 import { Pets } from "../../interfaces/customer";
 import DeleteCard from "../Dialogs/DeleteCard";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState } from "../../store/store";
 import { deletePetDialog } from "../../store/reducers/Dialog.store";
 
 type PetProps = {
@@ -29,12 +29,7 @@ function PetCard(props: PetProps) {
   return (
     <>
       <Card>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
+        <div className="pet-navbar-card">
           <IconButton
             aria-label="delete"
             size="small"
@@ -45,12 +40,7 @@ function PetCard(props: PetProps) {
           </IconButton>
         </div>
         {props.pet.species === "dog" && (
-          <CardMedia
-            style={{
-              background: "#ccc",
-              display: "flex",
-              justifyContent: "center",
-            }}
+          <CardMedia className='pet-img'
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/620/620851.png"
@@ -60,12 +50,7 @@ function PetCard(props: PetProps) {
           </CardMedia>
         )}
         {props.pet.species === "cat" && (
-          <CardMedia
-            style={{
-              background: "#ccc",
-              display: "flex",
-              justifyContent: "center",
-            }}
+          <CardMedia className='pet-img'
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/2138/2138241.png"
@@ -76,11 +61,7 @@ function PetCard(props: PetProps) {
         )}
         {props.pet.species === "exotic" && (
           <CardMedia
-            style={{
-              background: "#ccc",
-              display: "flex",
-              justifyContent: "center",
-            }}
+             className='pet-img'
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/220/220105.png"
@@ -91,28 +72,28 @@ function PetCard(props: PetProps) {
         )}
 
         <CardContent>
-          <Typography>Nome: {props.pet.name}</Typography>
-          <Typography>Idade: {props.pet.age} anos</Typography>
-          {props.pet.genger === "female" && <Typography>Gênero: Fêmea</Typography>}
-          {props.pet.genger === "male" && <Typography>Gênero: Macho</Typography>}
-          <Typography>Peso: {props.pet.weight.toFixed(2)} Kg</Typography>
+          <Typography className="text-title">Nome: <span className='text-content'>{props.pet.name}</span></Typography>
+          <Typography className="text-title">Idade: <span className='text-content'>{props.pet.age} anos</span></Typography>
+          {props.pet.genger === "female" && <Typography className="text-title">Gênero: <span className='text-content'>Fêmea</span></Typography>}
+          {props.pet.genger === "male" && <Typography className="text-title">Gênero: <span className='text-content'>Macho</span></Typography>}
+          <Typography className="text-title">Peso: <span className='text-content'>{props.pet.weight.toFixed(2)} Kg</span></Typography>
           {props.pet.service === "bath" && (
-            <Typography>Tratamento: Banho</Typography>
+            <Typography className="text-title">Tratamento: <span className='text-content'>Banho</span></Typography>
           )}
           {props.pet.service === "shear" && (
-            <Typography>Tratamento: Tosa</Typography>
+            <Typography className="text-title">Tratamento: <span className='text-content'>Tosa</span></Typography>
           )}
           {props.pet.service === "bath and shear" && (
-            <Typography>Tratamento: Banho e Tosa</Typography>
+            <Typography className="text-title">Tratamento: <span className='text-content'>Banho e Tosa</span></Typography>
           )}
           {props.pet.service === "other" && (
-            <Typography>Tratamento: Outro</Typography>
+            <Typography className="text-title">Tratamento: <span className='text-content'>Outro</span></Typography>
           )}
 
-          {props.pet.species === "dog" && <Typography>Espécie: Cachorro</Typography>}
-          {props.pet.species === "cat" && <Typography>Espécie: Gato</Typography>}
+          {props.pet.species === "dog" && <Typography className="text-title">Espécie: <span className='text-content'>Cachorro</span></Typography>}
+          {props.pet.species === "cat" && <Typography className="text-title">Espécie: <span className='text-content'>Gato</span></Typography>}
           {props.pet.species === "exotic" && (
-            <Typography>Espécie: Exótica</Typography>
+            <Typography className="text-title">Espécie: <span className='text-content'>Exótica</span></Typography>
           )}
         </CardContent>
       </Card>

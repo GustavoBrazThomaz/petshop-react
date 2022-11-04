@@ -122,11 +122,11 @@ function CreateCustomer() {
               padding: "1rem",
             }}
           >
-            <Button type="submit" variant="outlined" color="primary">
+            <Button type="submit" variant="contained" color="primary">
               Adicionar
             </Button>
             <Button
-              variant="outlined"
+              variant="contained"
               color="warning"
               onClick={() => dispatch(createCustomerDialog())}
             >

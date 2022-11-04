@@ -10,6 +10,7 @@ import UseCpfFormat from '../../hooks/UseCpfFormat';
 import SnackbarTemplate from '../../templates/Snackbar/SnackbarTemplate';
 import { useDispatch } from 'react-redux';
 import { openSnackbar, snackbarMsg, snackbarStatus } from '../../store/reducers/Snackbar.store';
+import LoginStyle from './LoginStyle';
 
 function Register() {
     document.title = 'Criar Conta'
@@ -44,25 +45,24 @@ function Register() {
 
   return (
     <>
-    <Container style={{marginTop: '5rem', height: '85vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <Card style={{width: '300px'}}>
+    <LoginStyle/>
+    <Container className='login-container'>
+        <Card style={{width: '300px', marginTop: '4rem'}}>
             <form onSubmit={handleSubmit(onSubmit)}>  
-                <div style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', padding: '1rem'}}>
-                <Avatar sx={{ bgcolor: '#327da8', marginTop: '1rem', color: '#fff' }}><PetsIcon/></Avatar>
+                <div className='login-card-container'>
+                <Avatar className="login-avatar"><PetsIcon/></Avatar>
                 <Typography style={{marginTop: '1rem'}} variant="h5">Criar conta</Typography>
                 </div>
-                <CardContent style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                    <TextField style={{marginBottom: '1rem'}} variant='outlined' label='Nome' {...register("name",{required: true})}></TextField>
-
-                    <PatternFormat label="Cpf" format='###.###.###-##' mask="_" onChange={(e: any) => cpf = e.target.value} required={true} customInput={TextField} style={{marginBottom: '1rem', marginTop: '0.5rem'}}/>
-                   
-                    <TextField style={{marginBottom: '1rem'}} variant='outlined' label='Email' {...register("email",{required: true})}></TextField>
-                    <TextField type='password' style={{marginBottom: '1rem'}} variant='outlined' label='Senha' {...register("password",{required: true})}></TextField>
-                    <TextField type='password' style={{marginBottom: '1rem'}} variant='outlined' label='Confirme sua Senha' {...register("confirmPassword",{required: true})}></TextField>
-                    <Typography>Já possui uma conta? <Link to='/' style={{color: 'white'}}>Entrar</Link> </Typography>
+                <CardContent className='login-card-content'>
+                    <TextField className="login-input" variant='outlined' label='Nome' {...register("name",{required: true})}></TextField>
+                    <PatternFormat label="Cpf" format='###.###.###-##' mask="_" onChange={(e: any) => cpf = e.target.value} required={true} customInput={TextField} style={{marginTop: '1rem'}}/>
+                    <TextField className="login-input" variant='outlined' label='Email' {...register("email",{required: true})}></TextField>
+                    <TextField type='password' className="login-input" variant='outlined' label='Senha' {...register("password",{required: true})}></TextField>
+                    <TextField type='password' className="login-input" variant='outlined' label='Confirme sua Senha' {...register("confirmPassword",{required: true})}></TextField>
+                    <Typography className='login-input'>Já possui uma conta? <Link to='/' className='login-link'>Entrar</Link> </Typography>
                 </CardContent>
-                <CardActions style={{padding: '2rem 2rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                    <Button variant='outlined' style={{width: '150px'}} type='submit'>Criar Conta</Button>
+                <CardActions className='login-card-action'>
+                    <Button className='login-button' variant='outlined' type='submit'>Criar Conta</Button>
                 </CardActions>
             </form>
         </Card>

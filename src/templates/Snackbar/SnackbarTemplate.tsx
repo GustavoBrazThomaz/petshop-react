@@ -1,7 +1,7 @@
 import { Alert, Snackbar } from '@mui/material'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from "../../store/index"
+import { RootState } from "../../store/store"
 import { openSnackbar } from '../../store/reducers/Snackbar.store'
 
 function SnackbarTemplate() {

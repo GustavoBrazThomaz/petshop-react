@@ -2,7 +2,7 @@ import { Button, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 import React from 'react'
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { RootState } from '../../store/store';
 import API from '../../hooks/API';
 import { deleteCustomerDialog, deletePetDialog } from '../../store/reducers/Dialog.store';
 import { refreshPage } from '../../store/reducers/Refresh.store';
@@ -67,14 +67,15 @@ function DeleteCard(props: deleteString) {
            }}
          >
            <Button
-             variant="outlined"
+             variant="contained"
              color="error"
              onClick={handleDeletePet}
              endIcon={<DeleteIcon />}
            >
              Deletar
            </Button>
-           <Button variant="outlined" color="primary" onClick={handleClose}>
+           
+           <Button variant="contained" color="primary" onClick={handleClose}>
              Cancelar
            </Button>
          </DialogActions>
@@ -98,14 +99,14 @@ function DeleteCard(props: deleteString) {
            }}
          >
            <Button
-             variant="outlined"
+             variant="contained"
              color="error"
              onClick={handleDeleteCustomer}
              endIcon={<DeleteIcon />}
            >
              Deletar
            </Button>
-           <Button variant="outlined" color="primary" onClick={handleClose}>
+           <Button variant="contained" color="primary" onClick={handleClose}>
              Cancelar
            </Button>
          </DialogActions>

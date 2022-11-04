@@ -5,7 +5,7 @@ import CustomerCard from "../../templates/Cards/CustomerCard";
 import API from "../../hooks/API";
 import CreateCustomer from "../../templates/Dialogs/CreateCustomer";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState } from "../../store/store";
 import { createCustomerDialog } from "../../store/reducers/Dialog.store";
 import SnackbarTemplate from "../../templates/Snackbar/SnackbarTemplate";
 
@@ -56,7 +56,8 @@ function Home() {
               </Typography>
               <Button
                 style={{ marginTop: "3rem", color: "white" }}
-                variant="outlined"
+                className="button-primary"
+                variant="contained"
                 onClick={() => dispatch(createCustomerDialog())}
               >
                 Adicionar Cliente
@@ -68,8 +69,8 @@ function Home() {
           <>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
-                variant="outlined"
-                color="primary"
+                className="button-primary"
+                variant="contained"
                 onClick={() => dispatch(createCustomerDialog())}
               >
                 Adicionar Cliente
